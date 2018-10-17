@@ -1,7 +1,9 @@
 package com.basikal.motosos;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         mStartButton.setOnClickListener(this);
         mStopButton.setOnClickListener(this);
+
+
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String defaultValue = getResources().getString(R.string.detection_status_default);
+        String detection_status = sharedPref.getString(getString(R.string.detection_status), defaultValue);
+        if (detection_status.equalsIgnoreCase("on")) {
+            mStartButton.setVisibility(View.GONE);
+            mStopButton.setVisibility(View.VISIBLE);
+        } else {
+            mStartButton.setVisibility(View.VISIBLE);
+            mStopButton.setVisibility(View.GONE);
+        }
     }
 
     public void startService(View view) {
@@ -47,16 +61,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
         if (view == mStartButton) {
             Log.d(TAG, "onClick: start");
             mStartButton.setVisibility(View.GONE);
             mStopButton.setVisibility(View.VISIBLE);
             startService(view);
+            editor.putString(getString(R.string.detection_status), "on");
+            editor.apply();
         } else if (view == mStopButton) {
             Log.d(TAG, "onClick: stop");
             mStartButton.setVisibility(View.VISIBLE);
             mStopButton.setVisibility(View.GONE);
             stopService(view);
+            editor.putString(getString(R.string.detection_status), "off");
+            editor.apply();
         }
     }
 }

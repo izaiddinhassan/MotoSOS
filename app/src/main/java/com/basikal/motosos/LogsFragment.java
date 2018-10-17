@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import java.util.List;
 
 public class LogsFragment extends Fragment implements View.OnClickListener {
 
+    private static final String TAG = "LogsFragment";
     private Button mAddTestButton;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -52,19 +54,25 @@ public class LogsFragment extends Fragment implements View.OnClickListener {
 
         mAddTestButton.setOnClickListener(this);
 
-        mDatabase.child("AccidentLog").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //iterating through all the values in database
-                mLogsList = new ArrayList<>();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Logs logs = postSnapshot.getValue(Logs.class);
-                    mLogsList.add(logs);
+        String id = mAuth.getUid();
+        Log.d(TAG, "onViewCreated: " + id);
+        mDatabase.child("Logs")
+                .orderByChild("userId")
+                .equalTo(id)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        //iterating through all the values in database
+                        mLogsList = new ArrayList<>();
+                        for (DataSnapshot logsSnapshot : dataSnapshot.getChildren()) {
+                            Logs logs = logsSnapshot.getValue(Logs.class);
+                            Log.d(TAG, "onDataChange: " + logs);
+                            mLogsList.add(logs);
                 }
                 //creating adapter
                 mAdapter = new LogsAdapter(getActivity(), mLogsList);
 
-                //adding adapter to recyclerview
+                        //adding adapter to recyclerView
                 mRecyclerView.setAdapter(mAdapter);
             }
 
@@ -73,8 +81,6 @@ public class LogsFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-
-        //other method
         mRecyclerView.setHasFixedSize(true); //set fixed size for element in recycler view
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
@@ -89,8 +95,7 @@ public class LogsFragment extends Fragment implements View.OnClickListener {
         String logAccidentStatus = "aa";
         String userId = mAuth.getUid();
         Logs logs = new Logs(logId, logDate, logTime, logLatLong, logGyroValue, logAcceleroValue, logAccidentStatus, userId);
-        mDatabase.child("AccidentLog")
-                .child(userId)
+        mDatabase.child("Logs")
                 .child(logId)
                 .setValue(logs)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

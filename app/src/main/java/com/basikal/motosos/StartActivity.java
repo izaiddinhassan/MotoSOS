@@ -32,19 +32,16 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         super.onStart();
         if (mAuth.getCurrentUser() != null) {
             //Already logged in
-            Intent intent = new Intent(this, MainActivity.class);
             finish();
-            startActivity(intent);
+            startActivity(new Intent(this, MainActivity.class));
         }
     }
 
     @Override
     public void onClick(View view) {
         if (view == mLoginView) {
-            finish();
             startActivity(new Intent(this, LoginActivity.class));
         } else if (view == mRegisterView) {
-            finish();
             startActivity(new Intent(this, RegisterActivity.class));
         }
     }

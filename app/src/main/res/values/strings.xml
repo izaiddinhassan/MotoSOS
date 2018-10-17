@@ -19,4 +19,13 @@
     <string name="button_update">UPDATE</string>
     <string name="text_loading">.....</string>
     <string name="button_register_email">Register With Email</string>
+    <string name="email">E-Mail</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="name">Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="address">Address</string>
+    <string name="detection_status_default">off</string>
+    <string name="detection_status">on</string>
+    <string name="sms_delivered_message">A SMS has been send to +60196142432</string>
 </resources>

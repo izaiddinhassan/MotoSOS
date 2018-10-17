@@ -23,7 +23,7 @@ import com.google.firebase.storage.StorageReference;
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private TextView mNameView, mEmailView, mPhoneNoView, mAddressView;
-    private DatabaseReference mUserRef;
+    private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FloatingActionButton mEditButton;
     private ImageView mProfileImage;
@@ -42,7 +42,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         // do your variables initialisations here except Views!!!
-        mUserRef = DbConn.getDatabase().getReference();
+        mDatabase = DbConn.getDatabase().getReference();
         mAuth = FirebaseAuth.getInstance();
         mStorage = FirebaseStorage.getInstance();
         mStorageRef = mStorage.getReference();
@@ -74,7 +74,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 .skipMemoryCache(true)
                 .into(mProfileImage);
 
-        mUserRef.child("User").child(uid).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("User").child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
@@ -104,9 +104,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             bundle.putString("address", mAddressView.getText().toString().trim());
             UpdateUserFragment updateUserFragment = new UpdateUserFragment();
             updateUserFragment.setArguments(bundle);
-            getFragmentManager()
-                    .beginTransaction()
+            getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, updateUserFragment, "FRAG_UPDATE_USER")
+                    .addToBackStack(null)
                     .commit();
 
             /*UpdateUserDialog dialog = new UpdateUserDialog();

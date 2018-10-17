@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +22,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private EditText mEmailView, mPasswordView;
     private Button mLoginButton;
-    private TextView mForgetPasswordView, mRegisterView;
+    private TextView mForgetPasswordView;
     private FirebaseAuth mAuth;
     private ProgressBar mProgressBar;
 
@@ -29,6 +30,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("MotoSOS");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //create instances
         mAuth = FirebaseAuth.getInstance();
@@ -38,13 +45,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mPasswordView = findViewById(R.id.etPassword);
         mLoginButton = findViewById(R.id.btnLogin);
         mForgetPasswordView = findViewById(R.id.tvForgetPassword);
-        mRegisterView = findViewById(R.id.tvRegister);
         mProgressBar = findViewById(R.id.progressBar);
 
         //set listener
         mLoginButton.setOnClickListener(this);
         mForgetPasswordView.setOnClickListener(this);
-        mRegisterView.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void login() {
@@ -92,9 +103,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if (v == mLoginButton) {
             login();
-        } else if (v == mRegisterView) {
-            finish();
-            startActivity(new Intent(this, RegisterActivity.class));
         } else if (v == mForgetPasswordView) {
             //forgot password method
         }

@@ -144,7 +144,7 @@ public class UpdateUserFragment extends Fragment implements View.OnClickListener
     }
 
     private void uploadFile() {
-        final String uid = mAuth.getCurrentUser().getUid();
+        final String uid = mAuth.getUid();
         if (mFilePath != null) {
             mStorageRef.child("images/profile/" + uid + ".jpg").putFile(mFilePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

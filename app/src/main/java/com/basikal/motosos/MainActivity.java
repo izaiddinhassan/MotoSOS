@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "MainActivity";
     private DrawerLayout drawer;
     private FirebaseAuth mAuth;
     private TextView mEmailView;
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements
                     public void onClick(DialogInterface dialog, int whichButton) {
                         mAuth.signOut();
                         finish();
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        startActivity(new Intent(getApplicationContext(), StartActivity.class));
                         dialog.dismiss();
                     }
                 })
