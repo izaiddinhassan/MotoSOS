@@ -12,7 +12,6 @@ import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import static com.basikal.motosos.App.CHANNEL_ID;
@@ -21,7 +20,6 @@ public class DetectionService extends Service implements SensorEventListener {
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer, mGyro;
-    private TextView mAc, mGy;
     private Float mAcceleration = 0.0f;
     private Boolean mGyroscope = false;
     private Float mGyroscopeValue = 0.0f;
@@ -73,7 +71,11 @@ public class DetectionService extends Service implements SensorEventListener {
             Toast.makeText(this, "Accident Detected", Toast.LENGTH_LONG).show();
             mSensorManager.unregisterListener(this);
             stopSelf();
-            startActivity(new Intent(this, LockscreenActivity.class));
+
+            Intent intent = new Intent(this, LockScreenActivity.class);
+            intent.putExtra("ACCELERATION_VALUE", mAcceleration);
+            intent.putExtra("GYROSCOPE_VALUE", mGyroscopeValue);
+            startActivity(intent);
         }
     }
 

@@ -40,7 +40,7 @@ public class UpdateUserFragment extends Fragment implements View.OnClickListener
     private EditText mNameView, mPhoneNoView, mAddressView;
     private TextView mCancelView, mUpdateView;
     private FirebaseAuth mAuth;
-    private DatabaseReference mUserRef;
+    private DatabaseReference mDatabase;
     private Button mSelectImageButton;
     private Uri mFilePath;
     private ImageView mProfileImage;
@@ -62,7 +62,7 @@ public class UpdateUserFragment extends Fragment implements View.OnClickListener
 
         //create instances
         mAuth = FirebaseAuth.getInstance();
-        mUserRef = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         mStorage = FirebaseStorage.getInstance();
         mStorageRef = mStorage.getReference();
         mImageRef = mStorageRef.child("images/profile/" + mAuth.getCurrentUser().getUid() + ".jpg");
@@ -106,9 +106,9 @@ public class UpdateUserFragment extends Fragment implements View.OnClickListener
         String phoneNo = mPhoneNoView.getText().toString().trim();
         String address = mAddressView.getText().toString().trim();
 
-        User user = new User(uid, name, email, phoneNo, address);
+        User user = new User(uid, name, email, phoneNo, address, null, null, null, null, null, null);
         Map<String, Object> postValues = user.toMap();
-        mUserRef.child("User").child(uid).updateChildren(postValues).addOnCompleteListener(new OnCompleteListener<Void>() {
+        mDatabase.child("User").child(uid).updateChildren(postValues).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {

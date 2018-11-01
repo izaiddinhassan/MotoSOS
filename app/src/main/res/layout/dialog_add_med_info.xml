@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="@dimen/keyline_1_minus_8dp"
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,17 +18,42 @@
             android:id="@+id/tvIceTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Medical Condition "
+            android:text="Medical Information"
             android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+
+        <TextView
+            android:id="@+id/id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Information Type" />
+
+        <Spinner
+            android:id="@+id/spType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dropDownWidth="match_parent" />
 
         <TextView
             android:id="@+id/tvIceName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Medical Condition Name" />
+            android:text="Medical Information Name" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Extra Information" />
+
+        <EditText
+            android:id="@+id/etExtra"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"

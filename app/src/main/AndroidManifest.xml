@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <service android:name=".DetectionService" />
-        <activity android:name=".LockscreenActivity" />
+        <activity android:name=".LockScreenActivity" />
     </application>
 
 </manifest>

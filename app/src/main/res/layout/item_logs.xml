@@ -47,10 +47,23 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Location (Lat, Long)" />
+                android:text="Latitude" />
 
             <TextView
-                android:id="@+id/tvLatLong"
+                android:id="@+id/tvLat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Longitude" />
+
+            <TextView
+                android:id="@+id/tvLong"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView"

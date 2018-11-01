@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "MainActivity";
     private DrawerLayout drawer;
     private FirebaseAuth mAuth;
     private TextView mEmailView;
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements
         navigationView.setNavigationItemSelectedListener(this);
 
         //set user information from db to drawer
-        String uid = mAuth.getCurrentUser().getUid();
         String email = mAuth.getCurrentUser().getEmail();
         mEmailView = navigationView.getHeaderView(0).findViewById(R.id.nav_header_email);
         mEmailView.setText(email);
@@ -79,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.nav_ice:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, new IceFragment(), "FRAG_ICE")
+                        .replace(R.id.fragment_container, new MedInfoFragment(), "FRAG_ICE")
                         .commit();
                 break;
             case R.id.nav_logs:

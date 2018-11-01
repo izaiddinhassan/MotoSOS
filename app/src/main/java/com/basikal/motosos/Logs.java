@@ -4,7 +4,8 @@ public class Logs {
     String logId;
     String logDate;
     String logTime;
-    String logLatLong;
+    String logLat;
+    String logLong;
     String logGyroValue;
     String logAcceleroValue;
     String logAccidentStatus;
@@ -14,11 +15,12 @@ public class Logs {
 
     }
 
-    public Logs(String logId, String logDate, String logTime, String logLatLong, String logGyroValue, String logAcceleroValue, String logAccidentStatus, String userId) {
+    public Logs(String logId, String logDate, String logTime, String logLat, String logLong, String logGyroValue, String logAcceleroValue, String logAccidentStatus, String userId) {
         this.logId = logId;
         this.logDate = logDate;
         this.logTime = logTime;
-        this.logLatLong = logLatLong;
+        this.logLat = logLat;
+        this.logLong = logLong;
         this.logGyroValue = logGyroValue;
         this.logAcceleroValue = logAcceleroValue;
         this.logAccidentStatus = logAccidentStatus;
@@ -49,12 +51,20 @@ public class Logs {
         this.logTime = logTime;
     }
 
-    public String getLogLatLong() {
-        return logLatLong;
+    public String getLogLat() {
+        return logLat;
     }
 
-    public void setLogLatLong(String logLatLong) {
-        this.logLatLong = logLatLong;
+    public void setLogLat(String logLat) {
+        this.logLat = logLat;
+    }
+
+    public String getLogLong() {
+        return logLong;
+    }
+
+    public void setLogLong(String logLong) {
+        this.logLong = logLong;
     }
 
     public String getLogGyroValue() {

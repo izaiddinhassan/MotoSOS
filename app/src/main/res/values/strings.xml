@@ -1,9 +1,8 @@
 <resources>
     <string name="app_name">MotoSOS</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="title_login">User Login</string>
+    <string name="title_login">LOGIN</string>
     <string name="hint_email">customer@email.com</string>
     <string name="hint_password">password</string>
     <string name="button_login">LOGIN</string>
@@ -18,7 +17,7 @@
     <string name="button_cancel">CANCEL</string>
     <string name="button_update">UPDATE</string>
     <string name="text_loading">.....</string>
-    <string name="button_register_email">Register With Email</string>
+    <string name="button_register_email">REGISTER</string>
     <string name="email">E-Mail</string>
     <string name="password">Password</string>
     <string name="username">Username</string>

@@ -113,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String phoneNo = mPhoneView.getText().toString().trim();
         String address = mAddressView.getText().toString().trim();
 
-        User user = new User(uid, name, email, phoneNo, address);
+        User user = new User(uid, name, email, phoneNo, address, null, null, null, null, null, null);
         mDatabase.child("User").child(uid).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

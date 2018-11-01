@@ -6,22 +6,26 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
-public class IceAddDialog extends DialogFragment implements View.OnClickListener {
-    private String mType;
-    private TextView mTypeTitleView, mTypeNameView, mAddView, mCancelView;
+public class MedInfoAddDialog extends DialogFragment implements View.OnClickListener {
     private DatabaseReference mDatabase;
+    private TextView mAddView, mCancelView;
     private FirebaseAuth mAuth;
+    private Spinner mType;
+    private EditText mNameView, mNotesView;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_add_ice, container, false);
+        return inflater.inflate(R.layout.dialog_add_med_info, container, false);
     }
 
     @Override
@@ -31,7 +35,15 @@ public class IceAddDialog extends DialogFragment implements View.OnClickListener
         mDatabase = DbConn.getDatabase().getReference();
         mAuth = FirebaseAuth.getInstance();
 
-        mTypeTitleView = view.findViewById(R.id.tvIceTitle);
+        mType = view.findViewById(R.id.spType);
+
+        String[] spinnerValue = {"Allergy", "Medical Condition", "Medication"};
+        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, spinnerValue);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mType.setAdapter(aa);
+
+
+        /*mTypeTitleView = view.findViewById(R.id.tvIceTitle);
         mTypeNameView = view.findViewById(R.id.tvIceName);
         mAddView = view.findViewById(R.id.tvAdd);
         mCancelView = view.findViewById(R.id.tvCancel);
@@ -47,10 +59,15 @@ public class IceAddDialog extends DialogFragment implements View.OnClickListener
         } else if (mType.equalsIgnoreCase("Allergy")) {
             mTypeTitleView.setText("Allergy");
             mTypeNameView.setText("Allergy Name");
-        }
+        }*/
     }
 
-    public void addIceInfo() {
+    public void addMedicalInfoToDb() {
+        String uid = mAuth.getUid();
+        String medType = mType.getSelectedItem().toString();
+    }
+
+    /*public void addIceInfo() {
         String uid = mAuth.getCurrentUser().getUid();
         String medicationUid = mDatabase.child("Medication").push().getKey();
         String medicationName = "Tester la";
@@ -61,8 +78,8 @@ public class IceAddDialog extends DialogFragment implements View.OnClickListener
 
         mType = getArguments().getString("type");
         if (mType.equalsIgnoreCase("Medication")) {
-            Medication medication = new Medication(medicationUid, medicationName);
-            mDatabase.child("Medication").child(uid).child(medicationUid).setValue(medication);
+            MedInfo medInfo = new MedInfo(medicationUid, medicationName);
+            mDatabase.child("Medication").child(uid).child(medicationUid).setValue(medInfo);
             getDialog().dismiss();
         } else if (mType.equalsIgnoreCase("Allergy")) {
             Medication medication = new Medication(medicationUid, medicationName);
@@ -73,12 +90,12 @@ public class IceAddDialog extends DialogFragment implements View.OnClickListener
             mDatabase.child("MedicalCondition").child(uid).child(medicationUid).setValue(medication);
             getDialog().dismiss();
         }
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
         if (v == mAddView) {
-            addIceInfo();
+            addMedicalInfoToDb();
         } else if (v == mCancelView) {
             getDialog().dismiss();
         }

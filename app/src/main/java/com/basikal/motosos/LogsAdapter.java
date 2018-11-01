@@ -34,7 +34,8 @@ public class LogsAdapter extends RecyclerView.Adapter<LogsAdapter.LogsViewHolder
         Logs logs = logsList.get(position);
         holder.dateView.setText(logs.getLogDate());
         holder.timeView.setText(logs.getLogTime());
-        holder.latLongView.setText(logs.getLogGyroValue());
+        holder.latView.setText(logs.getLogLat());
+        holder.longView.setText(logs.getLogLong());
         holder.gyroValue.setText(logs.getLogGyroValue());
         holder.acceleroValue.setText(logs.getLogAcceleroValue());
         holder.accidentStatusView.setText(logs.getLogAccidentStatus());
@@ -47,14 +48,15 @@ public class LogsAdapter extends RecyclerView.Adapter<LogsAdapter.LogsViewHolder
 
     class LogsViewHolder extends RecyclerView.ViewHolder {
 
-        TextView dateView, timeView, latLongView, gyroValue, acceleroValue, accidentStatusView;
+        TextView dateView, timeView, latView, longView, gyroValue, acceleroValue, accidentStatusView;
         CardView logsLayout;
 
         public LogsViewHolder(View itemView) {
             super(itemView);
             dateView = itemView.findViewById(R.id.tvDate);
             timeView = itemView.findViewById(R.id.tvTime);
-            latLongView = itemView.findViewById(R.id.tvLatLong);
+            latView = itemView.findViewById(R.id.tvLat);
+            longView = itemView.findViewById(R.id.tvLong);
             gyroValue = itemView.findViewById(R.id.tvGyroValue);
             acceleroValue = itemView.findViewById(R.id.tvAcceleroValue);
             accidentStatusView = itemView.findViewById(R.id.tvAccidentStatus);
