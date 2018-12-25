@@ -47,7 +47,6 @@ public class LogsAdapter extends RecyclerView.Adapter<LogsAdapter.LogsViewHolder
     }
 
     class LogsViewHolder extends RecyclerView.ViewHolder {
-
         TextView dateView, timeView, latView, longView, gyroValue, acceleroValue, accidentStatusView;
         CardView logsLayout;
 

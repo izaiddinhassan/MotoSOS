@@ -41,10 +41,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class LockScreenActivity extends AppCompatActivity implements View.OnClickListener {
+public class AccidentAlertActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "LockScreen Activity";
-    private TextView mNameView, mPhoneNumberView, mAddressView;
+    private TextView mNameView, mIcNoView, mAddressView, mDobView, mGenderView, mBloodTypeView, mInsPolicy, mInsPhoneNo;
     private Button mCloseButton, mCancelButton;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -61,7 +61,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lockscreen);
+        setContentView(R.layout.activity_accident_alert);
 
         //set up for full screen on lock screen
         lockScreenSetup();
@@ -76,8 +76,13 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
 
         //link with xml
         mNameView = findViewById(R.id.tvName);
-        mPhoneNumberView = findViewById(R.id.tvPhoneNo);
+        mIcNoView = findViewById(R.id.tvIcNo);
         mAddressView = findViewById(R.id.tvAddress);
+        mDobView = findViewById(R.id.tvDob);
+        mGenderView = findViewById(R.id.tvGender);
+        mBloodTypeView = findViewById(R.id.tvBloodType);
+        mInsPolicy = findViewById(R.id.tvInsPolicyNumber);
+        mInsPhoneNo = findViewById(R.id.tvInsPhoneNumber);
         mCancelButton = findViewById(R.id.btnCancel);
         mCloseButton = findViewById(R.id.btnClose);
         mCountdownView = findViewById(R.id.tvCountdown);
@@ -88,7 +93,6 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
 
         //get value from previous activity/services/fragment
         getBundleData();
-
 
         //get user data from FireBase
         getUserData();
@@ -162,8 +166,13 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 mNameView.setText(user.name);
-                mPhoneNumberView.setText(user.phoneNo);
+                mIcNoView.setText(user.icNo);
                 mAddressView.setText(user.address);
+                mDobView.setText(user.dob);
+                mGenderView.setText(user.gender);
+                mBloodTypeView.setText(user.bloodType);
+                mInsPolicy.setText(user.insurancePolicy);
+                mInsPhoneNo.setText(user.insurancePhone);
             }
 
             @Override
@@ -182,25 +191,35 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             }
 
             public void onFinish() {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor editor = sharedPref.edit();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AccidentAlertActivity.this);
+
+                SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(getString(R.string.detection_status), "off");
                 editor.apply();
+
+                String defaultNo = getResources().getString(R.string.emergency_contact_number_default);
+                String phone_no = prefs.getString(getString(R.string.emergency_contact_number), defaultNo);
+                Log.d(TAG, "PhoneNo: " + defaultNo + phone_no);
+
                 mCancelButton.setVisibility(View.GONE);
                 mCloseButton.setVisibility(View.VISIBLE);
-                sendSms();
-                mCountdownView.setText(R.string.sms_delivered_message);
+                sendSms(phone_no);
+                String smsDeliveryMessage = "An emergency message has been sent to " + phone_no;
+                //mCountdownView.setText(R.string.sms_delivered_message);
+                mCountdownView.setText(smsDeliveryMessage);
                 //save accident to log(database)
-                saveAccidentInformation();
+                createLog();
 
             }
         };
         mCountDownTimer.start();
     }
 
-    private void sendSms() {
-        String phoneNumber = "+60196142432";
-        String smsMessage = "Ali involved in an accident in http://maps.google.com/?q=" + mLat + "," + mLong + ". Please send help!!";
+    private void sendSms(String phone_no) {
+
+        //String phoneNumber = "+60196142432";
+        String name = mNameView.getText().toString().trim();
+        String smsMessage = name + " involved in an accident in http://maps.google.com/?q=" + mLat + "," + mLong + ". Please send help!!";
 
         String SMS_SENT = "SMS_SENT";
         String SMS_DELIVERED = "SMS_DELIVERED";
@@ -248,10 +267,10 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         }, new IntentFilter(SMS_DELIVERED));
 
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(phoneNumber, null, smsMessage, sentPendingIntent, deliveredPendingIntent);
+        smsManager.sendTextMessage(phone_no, null, smsMessage, sentPendingIntent, deliveredPendingIntent);
     }
 
-    private void saveAccidentInformation() {
+    private void createLog() {
         String uid = mDatabase.child("Logs").push().getKey();
         String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
         String time = new SimpleDateFormat("H:m:s", Locale.getDefault()).format(new Date());
@@ -267,9 +286,9 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(LockScreenActivity.this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccidentAlertActivity.this, "Saved successfully", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(LockScreenActivity.this, "Saved Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccidentAlertActivity.this, "Saved Failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -291,9 +310,9 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(LockScreenActivity.this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccidentAlertActivity.this, "Saved successfully", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(LockScreenActivity.this, "Saved Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccidentAlertActivity.this, "Saved Failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LogsFragment extends Fragment {
-
     private static final String TAG = "LogsFragment";
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -52,8 +50,6 @@ public class LogsFragment extends Fragment {
     private void readLogsByIdFromDb() {
         String id = mAuth.getUid();
         mDatabase.child("Logs")
-                .orderByChild("userId")
-                .equalTo(id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -61,7 +57,6 @@ public class LogsFragment extends Fragment {
                         mLogsList = new ArrayList<>();
                         for (DataSnapshot logsSnapshot : dataSnapshot.getChildren()) {
                             Logs logs = logsSnapshot.getValue(Logs.class);
-                            Log.d(TAG, "onDataChange: " + logs);
                             mLogsList.add(logs);
                         }
                         //creating adapter

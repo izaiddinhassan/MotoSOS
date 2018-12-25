@@ -2,6 +2,7 @@ package com.basikal.motosos;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
@@ -21,11 +25,10 @@ public class MedInfoAddDialog extends DialogFragment implements View.OnClickList
     private Spinner mType;
     private EditText mNameView, mNotesView;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_add_med_info, container, false);
+        return inflater.inflate(R.layout.fragment_form_med_info, container, false);
     }
 
     @Override
@@ -36,61 +39,44 @@ public class MedInfoAddDialog extends DialogFragment implements View.OnClickList
         mAuth = FirebaseAuth.getInstance();
 
         mType = view.findViewById(R.id.spType);
-
-        String[] spinnerValue = {"Allergy", "Medical Condition", "Medication"};
-        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, spinnerValue);
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mType.setAdapter(aa);
-
-
-        /*mTypeTitleView = view.findViewById(R.id.tvIceTitle);
-        mTypeNameView = view.findViewById(R.id.tvIceName);
+        mNameView = view.findViewById(R.id.etName);
+        mNotesView = view.findViewById(R.id.etExtra);
         mAddView = view.findViewById(R.id.tvAdd);
         mCancelView = view.findViewById(R.id.tvCancel);
 
         mAddView.setOnClickListener(this);
         mCancelView.setOnClickListener(this);
 
-        mType = getArguments().getString("type");
-        Toast.makeText(getActivity(), mType, Toast.LENGTH_SHORT).show();
-        if (mType.equalsIgnoreCase("Medication")) {
-            mTypeTitleView.setText("Medication");
-            mTypeNameView.setText("Medication Name");
-        } else if (mType.equalsIgnoreCase("Allergy")) {
-            mTypeTitleView.setText("Allergy");
-            mTypeNameView.setText("Allergy Name");
-        }*/
+        ArrayAdapter<CharSequence> adapterMedicalType = ArrayAdapter.createFromResource(getActivity(),
+                R.array.medical_type_array, android.R.layout.simple_spinner_item);
+        adapterMedicalType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mType.setAdapter(adapterMedicalType);
     }
 
     public void addMedicalInfoToDb() {
-        String uid = mAuth.getUid();
+        String medId = mDatabase.push().getKey();
         String medType = mType.getSelectedItem().toString();
+        String medName = mNameView.getText().toString().trim();
+        String medNote = mNotesView.getText().toString().trim();
+        String userUid = mAuth.getUid();
+
+        MedInfo medInfo = new MedInfo(medId, medType, medName, medNote, userUid);
+
+        mDatabase.child("MedicalInfo")
+                .child(medId)
+                .setValue(medInfo)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getActivity(), "Data Successfully Added", Toast.LENGTH_SHORT).show();
+                            getDialog().dismiss();
+                        } else {
+                            Toast.makeText(getActivity(), "FAILED: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
-
-    /*public void addIceInfo() {
-        String uid = mAuth.getCurrentUser().getUid();
-        String medicationUid = mDatabase.child("Medication").push().getKey();
-        String medicationName = "Tester la";
-        String conditionUid = mDatabase.child("Medication").push().getKey();
-        String conditionName = "Tester la";
-        String allergyUid = mDatabase.child("Medication").push().getKey();
-        String allergyName = "Tester la";
-
-        mType = getArguments().getString("type");
-        if (mType.equalsIgnoreCase("Medication")) {
-            MedInfo medInfo = new MedInfo(medicationUid, medicationName);
-            mDatabase.child("Medication").child(uid).child(medicationUid).setValue(medInfo);
-            getDialog().dismiss();
-        } else if (mType.equalsIgnoreCase("Allergy")) {
-            Medication medication = new Medication(medicationUid, medicationName);
-            mDatabase.child("Allergy").child(uid).child(medicationUid).setValue(medication);
-            getDialog().dismiss();
-        } else {
-            Medication medication = new Medication(medicationUid, medicationName);
-            mDatabase.child("MedicalCondition").child(uid).child(medicationUid).setValue(medication);
-            getDialog().dismiss();
-        }
-    }*/
 
     @Override
     public void onClick(View v) {

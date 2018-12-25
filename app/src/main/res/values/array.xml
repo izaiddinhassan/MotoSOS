@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string-array name="blood_type_array">
+        <item>No Data</item>
+        <item>A</item>
+        <item>B</item>
+        <item>AB</item>
+        <item>O</item>
+    </string-array>
+    <string-array name="medical_type_array">
+        <item>Allergy</item>
+        <item>Medical Condition</item>
+        <item>Medication</item>
+    </string-array>
+</resources>

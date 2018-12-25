@@ -89,9 +89,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onStart();
         if (mAuth.getCurrentUser() != null) {
             //Already logged in
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             finish();
-            startActivity(intent);
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
         }
     }
 

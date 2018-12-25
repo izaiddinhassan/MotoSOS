@@ -9,11 +9,11 @@ public class User {
     String uid;
     String name;
     String email;
+    String icNo;
     String phoneNo;
     String address;
-    String age;
+    String dob;
     String gender;
-    String race;
     String bloodType;
     String insurancePolicy;
     String insurancePhone;
@@ -22,15 +22,15 @@ public class User {
 
     }
 
-    public User(String uid, String name, String email, String phoneNo, String address, String age, String gender, String race, String bloodType, String insurancePolicy, String insurancePhone) {
+    public User(String uid, String name, String email, String icNo, String phoneNo, String address, String dob, String gender, String bloodType, String insurancePolicy, String insurancePhone) {
         this.uid = uid;
         this.name = name;
         this.email = email;
+        this.icNo = icNo;
         this.phoneNo = phoneNo;
         this.address = address;
-        this.age = age;
+        this.dob = dob;
         this.gender = gender;
-        this.race = race;
         this.bloodType = bloodType;
         this.insurancePolicy = insurancePolicy;
         this.insurancePhone = insurancePhone;
@@ -76,12 +76,12 @@ public class User {
         this.address = address;
     }
 
-    public String getAge() {
-        return age;
+    public String getDob() {
+        return dob;
     }
 
-    public void setAge(String age) {
-        this.age = age;
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 
     public String getGender() {
@@ -90,14 +90,6 @@ public class User {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public String getRace() {
-        return race;
-    }
-
-    public void setRace(String race) {
-        this.race = race;
     }
 
     public String getBloodType() {
@@ -116,6 +108,14 @@ public class User {
         this.insurancePolicy = insurancePolicy;
     }
 
+    public String getIcNo() {
+        return icNo;
+    }
+
+    public void setIcNo(String icNo) {
+        this.icNo = icNo;
+    }
+
     public String getInsurancePhone() {
         return insurancePhone;
     }
@@ -129,6 +129,11 @@ public class User {
         HashMap<String, Object> result = new HashMap<>();
         result.put("name", name);
         result.put("phoneNo", phoneNo);
+        result.put("dob", dob);
+        result.put("gender", gender);
+        result.put("bloodType", bloodType);
+        result.put("insurancePolicy", insurancePolicy);
+        result.put("insurancePhone", insurancePhone);
         result.put("address", address);
         return result;
     }

@@ -71,12 +71,15 @@ public class DetectionService extends Service implements SensorEventListener {
             Toast.makeText(this, "Accident Detected", Toast.LENGTH_LONG).show();
             mSensorManager.unregisterListener(this);
             stopSelf();
-
-            Intent intent = new Intent(this, LockScreenActivity.class);
-            intent.putExtra("ACCELERATION_VALUE", mAcceleration);
-            intent.putExtra("GYROSCOPE_VALUE", mGyroscopeValue);
-            startActivity(intent);
+            startEmergencyModule();
         }
+    }
+
+    public void startEmergencyModule() {
+        Intent intent = new Intent(this, AccidentAlertActivity.class);
+        intent.putExtra("ACCELERATION_VALUE", mAcceleration);
+        intent.putExtra("GYROSCOPE_VALUE", mGyroscopeValue);
+        startActivity(intent);
     }
 
     @Override

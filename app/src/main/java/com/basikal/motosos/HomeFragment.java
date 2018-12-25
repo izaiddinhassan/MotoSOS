@@ -1,23 +1,25 @@
 package com.basikal.motosos;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import static android.support.constraint.Constraints.TAG;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
-    private ImageButton mStartButton, mStopButton;
+    private ImageButton mStartButton, mStopButton, mEditButton, mSaveButton;
+    private EditText mEmergencyPhoneNumber;
 
     @Nullable
     @Override
@@ -31,12 +33,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         getActivity().setTitle("HOME");
         mStartButton = view.findViewById(R.id.btnStart);
         mStopButton = view.findViewById(R.id.btnStop);
+        mEditButton = view.findViewById(R.id.btnEdit);
+        mSaveButton = view.findViewById(R.id.btnSave);
+        mEmergencyPhoneNumber = view.findViewById(R.id.etEmergencyContact);
 
         mStartButton.setOnClickListener(this);
         mStopButton.setOnClickListener(this);
+        mEditButton.setOnClickListener(this);
+        mSaveButton.setOnClickListener(this);
 
+        mEmergencyPhoneNumber.setEnabled(false);
 
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         String defaultValue = getResources().getString(R.string.detection_status_default);
         String detection_status = sharedPref.getString(getString(R.string.detection_status), defaultValue);
         if (detection_status.equalsIgnoreCase("on")) {
@@ -46,6 +54,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             mStartButton.setVisibility(View.VISIBLE);
             mStopButton.setVisibility(View.GONE);
         }
+
+        String defaultNo = getResources().getString(R.string.emergency_contact_number_default);
+        String phone_no = sharedPref.getString(getString(R.string.emergency_contact_number), defaultNo);
+        if (!phone_no.equalsIgnoreCase(defaultNo)) {
+            mEmergencyPhoneNumber.setText(phone_no);
+        }
+        Log.d(TAG, "PhoneNo: " + defaultNo + phone_no);
+
     }
 
     public void startService(View view) {
@@ -61,7 +77,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = sharedPref.edit();
 
         if (view == mStartButton) {
@@ -78,6 +94,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             stopService(view);
             editor.putString(getString(R.string.detection_status), "off");
             editor.apply();
+        } else if (view == mEditButton) {
+            mEmergencyPhoneNumber.setEnabled(true);
+            mEditButton.setVisibility(View.GONE);
+            mSaveButton.setVisibility(View.VISIBLE);
+            mEmergencyPhoneNumber.setHint("enter emergency phone number here");
+        } else if (view == mSaveButton) {
+            mEmergencyPhoneNumber.setEnabled(false);
+            mSaveButton.setVisibility(View.GONE);
+            mEditButton.setVisibility(View.VISIBLE);
+            mEmergencyPhoneNumber.setHint("please set emergency number by clicking -->");
+            editor.putString(getString(R.string.emergency_contact_number),
+                    mEmergencyPhoneNumber.getText().toString().trim());
+            editor.commit();
         }
     }
 }

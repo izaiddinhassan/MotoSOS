@@ -112,11 +112,15 @@ public class MedInfoFragment extends Fragment implements View.OnClickListener {
                 });
     }
 
+    public void createMedicalInfo() {
+        MedInfoAddDialog dialog = new MedInfoAddDialog();
+        dialog.show(getActivity().getFragmentManager(), "AddMedicInfoDialog");
+    }
+
     @Override
     public void onClick(View v) {
         if (v == mAddButton) {
-            MedInfoAddDialog dialog = new MedInfoAddDialog();
-            dialog.show(getActivity().getFragmentManager(), "AddMedicInfoDialog");
+            createMedicalInfo();
         }
     }
 }

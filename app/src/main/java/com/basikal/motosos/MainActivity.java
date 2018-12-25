@@ -74,10 +74,16 @@ public class MainActivity extends AppCompatActivity implements
                         .replace(R.id.fragment_container, new ProfileFragment(), "FRAG_PROFILE")
                         .commit();
                 break;
-            case R.id.nav_ice:
+            case R.id.nav_emergency_contact:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, new MedInfoFragment(), "FRAG_ICE")
+                        .replace(R.id.fragment_container, new EmergencyContactFragment(), "FRAG_EMERGENCY_CONTACT")
+                        .commit();
+                break;
+            case R.id.nav_med_info:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new MedInfoFragment(), "FRAG_MED_INFO")
                         .commit();
                 break;
             case R.id.nav_logs:

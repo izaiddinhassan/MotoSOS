@@ -23,36 +23,36 @@ public class MedInfo {
         return medId;
     }
 
-    public void setMedId(String medId) {
-        this.medId = medId;
-    }
-
     public String getMedType() {
         return medType;
-    }
-
-    public void setMedType(String medType) {
-        this.medType = medType;
     }
 
     public String getMedName() {
         return medName;
     }
 
-    public void setMedName(String medName) {
-        this.medName = medName;
-    }
-
     public String getMedExtra() {
         return medExtra;
     }
 
-    public void setMedExtra(String medExtra) {
-        this.medExtra = medExtra;
-    }
-
     public String getUserId() {
         return userId;
+    }
+
+    public void setMedId(String medId) {
+        this.medId = medId;
+    }
+
+    public void setMedType(String medType) {
+        this.medType = medType;
+    }
+
+    public void setMedName(String medName) {
+        this.medName = medName;
+    }
+
+    public void setMedExtra(String medExtra) {
+        this.medExtra = medExtra;
     }
 
     public void setUserId(String userId) {
