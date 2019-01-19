@@ -12,5 +12,4 @@ public class DbConn {
         }
         return mDatabase;
     }
-
 }

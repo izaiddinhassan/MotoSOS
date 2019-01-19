@@ -1,0 +1,18 @@
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.preference.PreferenceCategory android:title="General">
+
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="night_mode"
+            android:summary="Turn the application into dark mode"
+            android:title="Night Mode" />
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="test_mode"
+            android:summary="Turn the application into test mode by decreasing the sensors trigger value"
+            android:title="Test Mode Mode" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+</android.support.v7.preference.PreferenceScreen>

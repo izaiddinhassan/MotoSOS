@@ -16,6 +16,9 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
@@ -36,9 +39,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.jintin.mixadapter.MixAdapter;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class AccidentAlertActivity extends AppCompatActivity implements View.OnClickListener {
@@ -55,13 +61,19 @@ public class AccidentAlertActivity extends AppCompatActivity implements View.OnC
     private LocationCallback mLocationCallback;
     private Float mAcceleration = 0.0f;
     private Float mGyroscopeValue = 0.0f;
-
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter mAdapter2;
+    private List<MedInfo> mMedInfoList;
+    private List<EmergencyContact> mEmergencyContactList;
     private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accident_alert);
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         //set up for full screen on lock screen
         lockScreenSetup();
@@ -73,6 +85,7 @@ public class AccidentAlertActivity extends AppCompatActivity implements View.OnC
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(0);
+        mRecyclerView = findViewById(R.id.rv);
 
         //link with xml
         mNameView = findViewById(R.id.tvName);
@@ -180,6 +193,67 @@ public class AccidentAlertActivity extends AppCompatActivity implements View.OnC
 
             }
         });
+        readEmergencyContactInfoFromDB();
+    }
+
+    private void readEmergencyContactInfoFromDB() {
+        final String id = mAuth.getUid();
+        mDatabase.child("MedicalInfo")
+                .orderByChild("userId")
+                .equalTo(id)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        //iterating through all the values in database
+                        mMedInfoList = new ArrayList<>();
+                        for (DataSnapshot medInfoSnapshot : dataSnapshot.getChildren()) {
+                            MedInfo medInfo = medInfoSnapshot.getValue(MedInfo.class);
+                            mMedInfoList.add(medInfo);
+                        }
+
+                        mDatabase.child("EmergencyContact")
+                                .orderByChild("userId")
+                                .equalTo(id)
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        //iterating through all the values in database
+                                        mEmergencyContactList = new ArrayList<>();
+                                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                            EmergencyContact emergencyContact = ds.getValue(EmergencyContact.class);
+                                            mEmergencyContactList.add(emergencyContact);
+                                            Log.d(TAG, "onDataChange: " + mEmergencyContactList.toString());
+                                        }
+                                        //creating adapter
+                                        mAdapter = new EmergencyContactAdapter(getApplicationContext(), mEmergencyContactList, "Accident");
+
+                                        //creating adapter
+                                        mAdapter2 = new MedInfoAdapter(getApplicationContext(), mMedInfoList, "Accident");
+
+                                        MixAdapter<RecyclerView.ViewHolder> adapter = new MixAdapter<>();
+                                        adapter.addAdapter(mAdapter);
+                                        adapter.addAdapter(mAdapter2);
+
+                                        //adding adapter to recyclerView
+                                        mRecyclerView.setAdapter(adapter);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+        mRecyclerView.setHasFixedSize(true); //set fixed size for element in recycler view
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
     }
 
     private void countdownTimer() {
@@ -187,7 +261,7 @@ public class AccidentAlertActivity extends AppCompatActivity implements View.OnC
 
             public void onTick(long millisUntilFinished) {
                 mCountdownView.setText(String.valueOf(millisUntilFinished / 1000));
-                //here you can have your logic to set text to edittext
+                //here you can have your logic to set text to edit text
             }
 
             public void onFinish() {
@@ -197,14 +271,10 @@ public class AccidentAlertActivity extends AppCompatActivity implements View.OnC
                 editor.putString(getString(R.string.detection_status), "off");
                 editor.apply();
 
-                String defaultNo = getResources().getString(R.string.emergency_contact_number_default);
-                String phone_no = prefs.getString(getString(R.string.emergency_contact_number), defaultNo);
-                Log.d(TAG, "PhoneNo: " + defaultNo + phone_no);
-
                 mCancelButton.setVisibility(View.GONE);
                 mCloseButton.setVisibility(View.VISIBLE);
-                sendSms(phone_no);
-                String smsDeliveryMessage = "An emergency message has been sent to " + phone_no;
+                sendSms();
+                String smsDeliveryMessage = "An emergency message has been sent to emergency contact number.";
                 //mCountdownView.setText(R.string.sms_delivered_message);
                 mCountdownView.setText(smsDeliveryMessage);
                 //save accident to log(database)
@@ -215,9 +285,9 @@ public class AccidentAlertActivity extends AppCompatActivity implements View.OnC
         mCountDownTimer.start();
     }
 
-    private void sendSms(String phone_no) {
+    private void sendSms() {
 
-        //String phoneNumber = "+60196142432";
+
         String name = mNameView.getText().toString().trim();
         String smsMessage = name + " involved in an accident in http://maps.google.com/?q=" + mLat + "," + mLong + ". Please send help!!";
 
@@ -266,8 +336,17 @@ public class AccidentAlertActivity extends AppCompatActivity implements View.OnC
             }
         }, new IntentFilter(SMS_DELIVERED));
 
+        List<String> emcPhoneNoList = new ArrayList<>();
+        for (EmergencyContact emergencyContact : mEmergencyContactList) {
+            String emcPhoneNo = emergencyContact.emcPhoneNo;
+            emcPhoneNoList.add(emcPhoneNo);
+        }
+
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(phone_no, null, smsMessage, sentPendingIntent, deliveredPendingIntent);
+        for (String phone_no : emcPhoneNoList) {
+            smsManager.sendTextMessage(phone_no, null, smsMessage, sentPendingIntent, deliveredPendingIntent);
+        }
+
     }
 
     private void createLog() {

@@ -8,7 +8,7 @@
     <string name="button_forget_password">Forgot Your Password?</string>
     <string name="button_register">REGISTER</string>
     <string name="title_register">User Registration</string>
-    <string name="hint_name">Customer Name</string>
+    <string name="hint_name">Name</string>
     <string name="hint_phone_no">0123456789</string>
     <string name="hint_address">Customer address</string>
     <string name="button_cancel">CANCEL</string>
@@ -23,10 +23,9 @@
     <string name="address">Address</string>
     <string name="detection_status_default">off</string>
     <string name="detection_status">on</string>
-    <string name="sms_delivered_message">A SMS has been send to +60196142432</string>
     <string name="dob">Date of Birth</string>
     <string name="gender">Gender</string>
-    <string name="ic_number">Identification (Mykad) Number</string>
+    <string name="ic_number">MyKad Number</string>
     <string name="blood_type">Blood Type</string>
     <string name="insurance_policy_number">Insurance Policy Number</string>
     <string name="insurance_phone_number">Insurance Phone Number</string>

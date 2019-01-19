@@ -11,10 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -73,7 +70,7 @@ public class MedInfoFragment extends Fragment implements View.OnClickListener {
                         }
                         Log.d(TAG, "onDataChange: " + mMedInfoList.toString());
                         //creating adapter
-                        mAdapter = new MedInfoAdapter(getActivity(), mMedInfoList);
+                        mAdapter = new MedInfoAdapter(getActivity(), mMedInfoList, null);
 
                         //adding adapter to recyclerView
                         mRecyclerView.setAdapter(mAdapter);
@@ -88,33 +85,11 @@ public class MedInfoFragment extends Fragment implements View.OnClickListener {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    private void writeMedicalInfoByIdToDb() {
-        String medId = mDatabase.child("MedicalInfo").push().getKey();
-        String medType = "TEst";
-        String medName = "TEst";
-        String medExtra = "TEst";
-        String userId = mAuth.getUid();
-
-        MedInfo medInfo = new MedInfo(medId, medType, medName, medExtra, userId);
-
-        mDatabase.child("MedicalInfo")
-                .child(medId)
-                .setValue(medInfo)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(), "success", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(), "failed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
     public void createMedicalInfo() {
-        MedInfoAddDialog dialog = new MedInfoAddDialog();
-        dialog.show(getActivity().getFragmentManager(), "AddMedicInfoDialog");
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new MedInfoCreateFragment(), "FRAG_CREATE_MED_INFO")
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

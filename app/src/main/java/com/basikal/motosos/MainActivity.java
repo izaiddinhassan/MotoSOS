@@ -92,6 +92,12 @@ public class MainActivity extends AppCompatActivity implements
                         .replace(R.id.fragment_container, new LogsFragment(), "FRAG_LOGS")
                         .commit();
                 break;
+            case R.id.nav_settings:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new SettingsFragment(), "FRAG_SETTINGS")
+                        .commit();
+                break;
             case R.id.nav_logout:
                 AlertDialog diaBox = AskOption();
                 diaBox.show();

@@ -50,6 +50,8 @@ public class LogsFragment extends Fragment {
     private void readLogsByIdFromDb() {
         String id = mAuth.getUid();
         mDatabase.child("Logs")
+                .orderByChild("userId")
+                .equalTo(id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -55,7 +55,10 @@ public class EmergencyContactFragment extends Fragment implements View.OnClickLi
     }
 
     public void getEmergencyContactFromDb() {
+        String id = mAuth.getUid();
         mDatabase.child("EmergencyContact")
+                .orderByChild("userId")
+                .equalTo(id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -67,7 +70,7 @@ public class EmergencyContactFragment extends Fragment implements View.OnClickLi
                             Log.d(TAG, "onDataChange: " + mEmergencyContactList.toString());
                         }
                         //creating adapter
-                        mAdapter = new EmergencyContactAdapter(getActivity(), mEmergencyContactList);
+                        mAdapter = new EmergencyContactAdapter(getActivity(), mEmergencyContactList, null);
 
                         //adding adapter to recyclerView
                         mRecyclerView.setAdapter(mAdapter);

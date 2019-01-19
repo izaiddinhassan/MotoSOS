@@ -30,6 +30,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private ImageView mProfileImage;
 
     private FirebaseStorage mStorage;
+
     private StorageReference mStorageRef;
     private StorageReference mImageRef;
 
@@ -94,7 +95,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() != null) {
                             User user = dataSnapshot.getValue(User.class);
-                            String name = user.name;
                             mNameView.setText(user.name);
                             mEmailView.setText(user.email);
                             mIcNoView.setText(user.icNo);

@@ -3,8 +3,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorBackground">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,7 +72,6 @@
                         android:inputType="textPersonName" />
 
                     <TextView
-                        android:id="@+id/textView5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/ic_number" />
@@ -115,7 +113,6 @@
                         android:inputType="textMultiLine|textPostalAddress" />
 
                     <TextView
-                        android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -130,7 +127,6 @@
                         android:inputType="textPersonName" />
 
                     <TextView
-                        android:id="@+id/textView12"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/gender" />
@@ -143,7 +139,6 @@
                         android:layout_marginBottom="4dp" />
 
                     <TextView
-                        android:id="@+id/textView6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/blood_type" />
@@ -156,7 +151,6 @@
                         android:layout_marginBottom="4dp" />
 
                     <TextView
-                        android:id="@+id/textView9"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/insurance_policy_number" />
@@ -170,7 +164,6 @@
                         android:inputType="textPersonName" />
 
                     <TextView
-                        android:id="@+id/textView4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/insurance_phone_number" />

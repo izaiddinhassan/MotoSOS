@@ -5,11 +5,13 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
@@ -67,11 +69,15 @@ public class DetectionService extends Service implements SensorEventListener {
     }
 
     private void detectAccident() {
-        if (mAcceleration > 1 && mGyroscope == true) {
+        if (mAcceleration > 1) {                 // && mGyroscope == true) {
             Toast.makeText(this, "Accident Detected", Toast.LENGTH_LONG).show();
             mSensorManager.unregisterListener(this);
             stopSelf();
             startEmergencyModule();
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getString(R.string.detection_status), "off");
+            editor.apply();
         }
     }
 
@@ -92,8 +98,6 @@ public class DetectionService extends Service implements SensorEventListener {
             mAcceleration = ax + ay + az;
         } else if (sensor.getType() == Sensor.TYPE_GYROSCOPE) {
             float gx = sensorEvent.values[0];
-            float gy = sensorEvent.values[1];
-            float gz = sensorEvent.values[2];
             float diffGyro = Math.abs(mGyroscopeValue - gx);
             if (diffGyro > 3) {
                 mGyroscope = true;
